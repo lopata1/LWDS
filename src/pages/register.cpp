@@ -1,7 +1,7 @@
 #include "../../include/pages/register.h"
 
 #include "../../include/html/html.h"
-#include "../../include/preprocessor.h"
+#include "../../include/html/preprocessor.h"
 #include "../../include/utils.h"
 
 const std::string RegisterPage::file_location_ = "register.html";
