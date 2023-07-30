@@ -1,0 +1,67 @@
+.header {
+    background-color: #aaa;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: solid 2px #000;
+}
+
+#page {
+    background-color: #ccc;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#content {
+    background-color: #999;
+    height: 100%;
+    display: flex;
+}
+
+#inbox {
+    background-color: #777;
+    height: 100%;
+    min-width: 300px;
+}
+
+#chat {
+    background-color:#999;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#messages {
+    height: 100%;
+    width: 100%;
+}
+
+#message-form {
+    min-height: 80px;
+    width: 100%;
+    background-color: #888;
+    border-top: solid 1px #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+textarea {
+    width: 70%;
+    height: 60%
+}
+
+#no-messages {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#no-messages p {
+    font-size: 20px;
+}

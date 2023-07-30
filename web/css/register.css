@@ -1,0 +1,29 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    padding:20px;
+    background-color: #bbb;
+    border-radius: 5px;
+    display:flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input[type=text], input[type=password] {
+    padding: 3px;
+    font-size: var(--text-size);
+}
+
+#error-message {
+    color:#f00;
+}

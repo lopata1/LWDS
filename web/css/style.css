@@ -1,0 +1,29 @@
+:root {
+    --text-size: 16px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+p, label {
+    font-size: var(--text-size);
+}
+
+input[type=text], input[type=password] {
+    padding: 3px;
+    font-size: var(--text-size);
+}
+
+button {
+    padding: 6px;
+}
+
+textarea {
+    resize: none;
+}
+
+.hidden {
+    display: none !important;
+}
