@@ -20,6 +20,7 @@ void IdMap::Init(const std::string map_file, int size, int key_size) {
     char* empty = new char[file_size];
     memset(empty, 0, file_size);
     fs.write(empty, file_size);
+    delete[] empty;
   }
 
   fs.close();
