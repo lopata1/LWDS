@@ -22,9 +22,10 @@ WebServer::WebServer(std::string root, int port) {
                     "Database used for storing website users.", 0};
 
   static const int kMaxUsers = 1000000;
-  databases_.users =
-      std::make_shared<Database<User>>("../databases/users_database.db", db_data);
-  databases_.users->MakeSecondaryKey("../databases/users_username.db", 20, kMaxUsers);
+  databases_.users = std::make_shared<Database<User>>(
+      "../databases/users_database.db", db_data);
+  databases_.users->MakeSecondaryKey("../databases/users_username.db", 20,
+                                     kMaxUsers);
 }
 
 int WebServer::StartWebServer() {

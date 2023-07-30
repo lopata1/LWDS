@@ -15,7 +15,7 @@ enum class HttpStatus {
 
 class HttpResponse {
  public:
-  HttpResponse() {};
+  HttpResponse(){};
   HttpResponse(const HttpStatus s);
   std::string BuildResponse();
   void SetHttpStatus(const HttpStatus s);

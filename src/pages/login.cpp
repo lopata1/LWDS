@@ -3,9 +3,9 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../../include/html/html.h"
 #include "../../include/html/preprocessor.h"
 #include "../../include/utils.h"
-#include "../../include/html/html.h"
 
 const std::string LoginPage::file_location_ = "login.html";
 
@@ -67,7 +67,6 @@ std::string LoginPage::BuildPage() {
     error_message.text_ = "Username or password is incorrect.";
     variables["error_message"] = error_message.Build();
   }
-    
 
   return Preprocess(page_data_.html, variables);
 }

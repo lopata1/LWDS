@@ -12,7 +12,8 @@ IndexPage::IndexPage(PageData page_data) : Page(page_data) {}
 std::string IndexPage::BuildPage() {
   std::unordered_map<std::string, std::string> variables;
 
-  User user = page_data_.users_db->GetDataByID(std::stoi(page_data_.session->data_["id"]));
+  User user = page_data_.users_db->GetDataByID(
+      std::stoi(page_data_.session->data_["id"]));
 
   variables["username"] = user.username;
 

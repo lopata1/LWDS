@@ -7,6 +7,7 @@ class Html {
  public:
   void AddElement(Element element);
   std::string Build();
+
  private:
   std::vector<Element> elements_;
 };
