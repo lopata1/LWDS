@@ -64,7 +64,7 @@ int IdMap::WriteKey(int offset, std::string& key) {
   fs.seekp((long long)offset * key_size_);
 
   if (fs.is_open() == 0) {
-    std::cout << "Cannot open file";
+    std::cout << "Cannot open idmap for writing\n";
     return -1;
   }
 
@@ -80,7 +80,7 @@ std::string IdMap::ReadKey(int offset) {
   fs.seekg((long long)key_size_ * offset);
 
   if (fs.is_open() == 0) {
-    std::cout << "Cannot open file";
+    std::cout << "Cannot open idmap for reading\n";
   }
 
   char* key_buffer = new char[key_size_];
@@ -100,7 +100,7 @@ int IdMap::WriteId(int offset, int value) {
   fs.seekp((long long)size_ * key_size_ + (long long)offset * sizeof(int));
 
   if (fs.is_open() == 0) {
-    std::cout << "Cannot open file";
+    std::cout << "Cannot open idmap for writing\n";
     return -1;
   }
 
@@ -116,7 +116,7 @@ int IdMap::ReadId(int offset) {
   fs.seekp((long long)size_ * key_size_ + (long long)offset * sizeof(int));
 
   if (fs.is_open() == 0) {
-    std::cout << "Cannot open file";
+    std::cout << "Cannot open idmap for reading\n";
   }
 
   int id = 0;

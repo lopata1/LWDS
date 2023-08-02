@@ -80,7 +80,7 @@ int Database<Data>::Write(Data* data, int offset) {
   fs.seekp(sizeof(DbData) + offset * sizeof(Data));
 
   if (fs.is_open() == 0) {
-    std::cout << "Cannot open file";
+    std::cout << "Cannot open database for writting\n";
     return -1;
   }
 
@@ -97,7 +97,7 @@ int Database<Data>::Read(int offset, Data* data) {
   fs.seekg(sizeof(DbData) + offset * sizeof(Data));
 
   if (fs.is_open() == 0) {
-    std::cout << "Cannot open file";
+    std::cout << "Cannot open database for reading\n";
     return -1;
   }
 

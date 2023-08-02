@@ -10,6 +10,10 @@
 #include "../include/utils.h"
 #include "../include/network.h"
 
+#ifndef _WIN32
+static const auto closesocket = close;
+#endif
+
 WebServer::WebServer(std::string root, int port) {
   root_directory_ = root;
   port_ = port;
@@ -29,6 +33,7 @@ int WebServer::StartWebServer() {
   if (StartWSA() != 0) {
     std::cout << "Failed to start WSA\n";
     return -1;
+  }
 #endif
 
   socket_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -59,11 +64,6 @@ int WebServer::StartWebServer() {
 
   if (listen(socket_, 5) < 0) {
     std::cout << "Failed to listen to port " << port_ << "\n";
-#ifndef _WIN32
-    if(port_ < 1000) {
-      std::cout << "Try running web server as root\n";
-    }
-#endif
     return -4;
   };
   return 0;
@@ -155,7 +155,6 @@ int WebServer::StartWSA() {
 
 int WebServer::GetFileContent(const std::string& path, std::string& content) {
   std::ifstream page(root_directory_ + path);
-  std::cout << root_directory_ + path;
   if (!page.is_open()) return -1;
 
   std::string line;
@@ -192,7 +191,7 @@ void WebServer::RespondToRequest(const HttpRequest& request,
   SetDefaultHeaders(response);
   std::string message = response.BuildResponse();
   send(request.socket_, message.c_str(), message.size(), 0);
-  close(request.socket_);
+  closesocket(request.socket_);
   return;
 }
 

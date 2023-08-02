@@ -152,7 +152,6 @@ int WebServer::StartWSA() {
 
 int WebServer::GetFileContent(const std::string& path, std::string& content) {
   std::ifstream page(root_directory_ + path);
-  std::cout << root_directory_ + path;
   if (!page.is_open()) return -1;
 
   std::string line;
