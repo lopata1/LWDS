@@ -1,17 +1,16 @@
 #pragma once
-#include <winsock2.h>
 
 #include <cstdarg>
 #include <iostream>
 #include <unordered_map>
+#include <memory>
 
 #include "databases/database.h"
 #include "http_request.h"
 #include "http_response.h"
 #include "pages/page.h"
 #include "session.h"
-
-#pragma comment(lib, "ws2_32.lib")
+#include "network.h"
 
 struct Databases {
   std::shared_ptr<Database<User>> users;

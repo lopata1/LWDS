@@ -1,8 +1,5 @@
 #include "../include/web_server.h"
 
-#include <WS2tcpip.h>
-#include <winsock2.h>
-
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -11,8 +8,7 @@
 #include "../include/pages/page.h"
 #include "../include/pages/pages.h"
 #include "../include/utils.h"
-
-#pragma comment(lib, "ws2_32.lib")
+#include "../include/network.h"
 
 WebServer::WebServer(std::string root, int port) {
   root_directory_ = root;
@@ -29,28 +25,45 @@ WebServer::WebServer(std::string root, int port) {
 }
 
 int WebServer::StartWebServer() {
+#ifdef _WIN32
   if (StartWSA() != 0) {
     std::cout << "Failed to start WSA\n";
     return -1;
-  }
+#endif
 
   socket_ = socket(AF_INET, SOCK_STREAM, 0);
-  if (socket_ == INVALID_SOCKET) {
+  if (socket_ < 0) {
     std::cout << "Failed to create socket\n";
     return -2;
   }
-  sock_address_.sin_addr.S_un.S_addr = INADDR_ANY;
+#ifndef _WIN32
+  int opt = 1;
+  if(setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+    std::cout << "Failed to setsockopt\n";
+    return -5;
+  }
+#endif
+
+  sock_address_.sin_addr.s_addr = INADDR_ANY;
   sock_address_.sin_port = htons(port_);
   sock_address_.sin_family = AF_INET;
 
-  if (bind(socket_, (sockaddr*)&sock_address_, sizeof(sock_address_)) ==
-      SOCKET_ERROR) {
+  if (bind(socket_, (sockaddr*)&sock_address_, sizeof(sock_address_)) < 0) {
+#ifdef _WIN32
     std::cout << "Failed to bind to port " << port_ << "\n";
+#else
+    std::cout << "Failed to bind to port " << port_ << (port_ < 1000 ? "! Try running as root\n" : "\n");  
+#endif
     return -3;
   }
 
-  if (listen(socket_, 5) == SOCKET_ERROR) {
+  if (listen(socket_, 5) < 0) {
     std::cout << "Failed to listen to port " << port_ << "\n";
+#ifndef _WIN32
+    if(port_ < 1000) {
+      std::cout << "Try running web server as root\n";
+    }
+#endif
     return -4;
   };
   return 0;
@@ -63,8 +76,12 @@ HttpRequest WebServer::WaitForConnection() {
   int size = sizeof(client_sock_address);
 
   do {
+#ifdef _WIN32
     request.socket_ = accept(socket_, (sockaddr*)&client_sock_address, &size);
-    if (request.socket_ == INVALID_SOCKET) continue;
+#else
+    request.socket_ = accept(socket_, (sockaddr*)&client_sock_address, (socklen_t*)&size);
+#endif
+   if (request.socket_ < 0) continue;
     request.sock_address_ = client_sock_address;
     static const int kTimeout = 1000;
     setsockopt(request.socket_, SOL_SOCKET, SO_RCVTIMEO, (char*)&kTimeout,
@@ -128,11 +145,13 @@ std::string WebServer::GenerateSessionId(int size) {
   return id;
 }
 
+#ifdef _WIN32
 int WebServer::StartWSA() {
   WSADATA wsa;
   if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return -1;
   return 0;
 }
+#endif
 
 int WebServer::GetFileContent(const std::string& path, std::string& content) {
   std::ifstream page(root_directory_ + path);
@@ -173,7 +192,7 @@ void WebServer::RespondToRequest(const HttpRequest& request,
   SetDefaultHeaders(response);
   std::string message = response.BuildResponse();
   send(request.socket_, message.c_str(), message.size(), 0);
-  closesocket(request.socket_);
+  close(request.socket_);
   return;
 }
 

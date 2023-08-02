@@ -1,5 +1,7 @@
 #include "../../include/pages/register.h"
 
+#include <cstring>
+
 #include "../../include/html/html.h"
 #include "../../include/html/preprocessor.h"
 #include "../../include/utils.h"

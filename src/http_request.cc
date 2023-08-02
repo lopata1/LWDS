@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <regex>
+#include <string>
 
 #include "../include/utils.h"
 
@@ -86,5 +87,5 @@ std::string HttpRequest::ConvertNumberToIp(unsigned int ip_number) {
 
 void HttpRequest::SetIpAddress(sockaddr_in& sock_address) {
   ip_address_ =
-      ConvertNumberToIp((unsigned int)sock_address.sin_addr.S_un.S_addr);
+      ConvertNumberToIp((unsigned int)sock_address.sin_addr.s_addr);
 }

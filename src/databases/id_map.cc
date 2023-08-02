@@ -1,5 +1,7 @@
 #include "../../include/databases/id_map.h"
 
+#include <cstring>
+
 IdMap::IdMap(const std::string map_file, int size, int key_size) {
   Init(map_file, size, key_size);
 }

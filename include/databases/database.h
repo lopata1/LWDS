@@ -3,9 +3,14 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 #include "id_map.h"
+
+#ifndef _WIN32
+static const auto strncpy_s = strncpy;
+#endif
 
 struct DbData {
   char title[50];

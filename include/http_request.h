@@ -1,5 +1,5 @@
 #pragma once
-#include <WinSock2.h>
+#include "network.h"
 
 #include <iostream>
 #include <unordered_map>

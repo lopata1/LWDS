@@ -1,8 +1,8 @@
 #include "../include/http_response.h"
 
-#include <WinSock2.h>
-
 #include <string>
+
+#include "../include/network.h"
 
 HttpResponse::HttpResponse(const HttpStatus s) { SetHttpStatus(s); }
 
