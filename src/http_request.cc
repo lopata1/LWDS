@@ -5,7 +5,7 @@
 
 #include "../include/utils.h"
 
-HttpRequest::HttpRequest(std::string& requestData) { Parse(requestData); }
+HttpRequest::HttpRequest(std::string& request_data) { Parse(request_data); }
 
 int HttpRequest::Parse(std::string& request_data) {
   int head_body_separator = request_data.find("\r\n\r\n");
