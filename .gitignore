@@ -1,4 +1,5 @@
 /out
+/build
 /bin
 /databases/*.db
 /.vs
