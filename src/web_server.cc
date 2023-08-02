@@ -83,17 +83,26 @@ HttpRequest WebServer::WaitForConnection() {
 #endif
    if (request.socket_ < 0) continue;
     request.sock_address_ = client_sock_address;
+
 #ifdef _WIN32
     int timeout = 1000;
+    if (setsockopt(request.socket_, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout,
+                   sizeof(timeout)) < 0) {
+      std::cout << "Failed to set timeout for client socket!\n";
+    }
+
 #else 
+
   static timeval timeout;
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
+  if (setsockopt(request.socket_, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                 sizeof(timeout)) < 0) {
+    std::cout << "Failed to set timeout for client socket!\n";
+  }
 #endif
-    if(setsockopt(request.socket_, SOL_SOCKET, SO_RCVTIMEO, &timeout,
-               sizeof(timeout)) < 0) {
-      std::cout << "Failed to set timeout for client socket!\n";
-    }
+
+    
   } while (ProcessConnection(request) != 0);
 
   return request;
