@@ -68,7 +68,7 @@ int WebServer::StartWebServer() {
   };
   return 0;
 }
-#include <errno.h>
+
 HttpRequest WebServer::WaitForConnection() {
   HttpRequest request;
 
