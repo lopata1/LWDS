@@ -1,15 +1,11 @@
-#include <filesystem>
 #include <iostream>
 
 #include "../include/utils.h"
 #include "../include/web_server.h"
 
-static const std::filesystem::path relative_server_root = "../web/";
-static const std::string absolute_server_root =
-    std::filesystem::absolute(relative_server_root).generic_string();
-
-static WebServer server(absolute_server_root, 80);
 int main() {
+  WebServer server(absolute_server_root, 80);
+
   if (server.StartWebServer() != 0) {
     std::cout << "Failed to start a web server\n";
     return -1;
