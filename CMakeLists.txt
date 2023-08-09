@@ -31,3 +31,6 @@ enable_testing()
 add_library(web_server_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 add_subdirectory(tests)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/config.ini
+     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)

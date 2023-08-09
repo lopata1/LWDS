@@ -2,9 +2,12 @@
 
 #include "../include/utils.h"
 #include "../include/web_server.h"
+#include "../include/config_parser.h"
 
 int main() {
-  WebServer server(absolute_server_root, 80);
+  auto config = ParseConfig("config.ini");
+  const int port = std::stoi(config["port"]);
+  WebServer server(config["root_directory_path"], port);
 
   if (server.StartWebServer() != 0) {
     std::cout << "Failed to start a web server\n";
