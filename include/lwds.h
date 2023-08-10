@@ -16,11 +16,8 @@ struct Databases {
   std::shared_ptr<Database<User>> users;
 };
 
-class LWDS {
- public:
-  LWDS(std::string root = ".", int port = 80);
-
-  int StartLWDS();
+namespace lwds {
+  int Start(std::string root = ".", int port = 80);
   HttpRequest WaitForConnection();
   bool FileExists(const std::string& kPath);
   int GetFileContent(const std::string& kPath, std::string& content);
@@ -30,13 +27,6 @@ class LWDS {
   void HandleRequest(HttpRequest& request);
   void InitializeSessionData(const std::string& kId);
   HttpResponse DefaultResponse(const HttpRequest& kRequest);
-
-  std::string root_directory_;
-  int port_;
-  Databases databases_;
-  std::unordered_map<std::string, Session> sessions_;
-
- private:
   int StartWSA();
   std::string GenerateSessionId(int size);
   void SetDefaultHeaders(HttpResponse& response);
@@ -49,6 +39,10 @@ class LWDS {
     return TPage(page_data).Handle();
   }
 
-  SOCKET socket_;
-  sockaddr_in sock_address_;
+  extern std::string root_directory;
+  extern int port;
+  extern Databases databases;
+  extern std::unordered_map<std::string, Session> sessions;
+  extern SOCKET lwds_socket;
+  extern sockaddr_in sock_address;
 };

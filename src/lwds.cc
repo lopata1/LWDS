@@ -5,21 +5,20 @@
 #include <regex>
 #include <string>
 
+#include "../include/network.h"
 #include "../include/pages/page.h"
 #include "../include/pages/pages.h"
 #include "../include/utils.h"
-#include "../include/network.h"
 
 #ifndef _WIN32
 static const auto closesocket = close;
 #endif
 
-LWDS::LWDS(std::string root, int port) {
-  root_directory_ = root;
-  port_ = port;
-}
+namespace lwds {
 
-int LWDS::StartLWDS() {
+int Start(std::string root, int port) {
+  root_directory = root;
+  port = port;
 #ifdef _WIN32
   if (StartWSA() != 0) {
     std::cout << "Failed to start WSA\n";
@@ -27,40 +26,42 @@ int LWDS::StartLWDS() {
   }
 #endif
 
-  socket_ = socket(AF_INET, SOCK_STREAM, 0);
-  if (socket_ < 0) {
+  lwds_socket = socket(AF_INET, SOCK_STREAM, 0);
+  if (lwds_socket < 0) {
     std::cout << "Failed to create socket\n";
     return -2;
   }
 #ifndef _WIN32
   int opt = 1;
-  if(setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+  if (setsockopt(socket_, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,
+                 sizeof(opt))) {
     std::cout << "Failed to setsockopt\n";
     return -5;
   }
 #endif
 
-  sock_address_.sin_addr.s_addr = INADDR_ANY;
-  sock_address_.sin_port = htons(port_);
-  sock_address_.sin_family = AF_INET;
+  sock_address.sin_addr.s_addr = INADDR_ANY;
+  sock_address.sin_port = htons(port);
+  sock_address.sin_family = AF_INET;
 
-  if (bind(socket_, (sockaddr*)&sock_address_, sizeof(sock_address_)) < 0) {
+  if (bind(lwds_socket, (sockaddr*)&sock_address, sizeof(sock_address)) < 0) {
 #ifdef _WIN32
-    std::cout << "Failed to bind to port " << port_ << "\n";
+    std::cout << "Failed to bind to port " << port << "\n";
 #else
-    std::cout << "Failed to bind to port " << port_ << (port_ < 1000 ? "! Try running as root\n" : "\n");  
+    std::cout << "Failed to bind to port " << port_
+              << (port_ < 1000 ? "! Try running as root\n" : "\n");
 #endif
     return -3;
   }
 
-  if (listen(socket_, 5) < 0) {
-    std::cout << "Failed to listen to port " << port_ << "\n";
+  if (listen(lwds_socket, 5) < 0) {
+    std::cout << "Failed to listen to port " << port << "\n";
     return -4;
   };
   return 0;
 }
 
-HttpRequest LWDS::WaitForConnection() {
+HttpRequest WaitForConnection() {
   HttpRequest request;
 
   sockaddr_in client_sock_address;
@@ -68,11 +69,13 @@ HttpRequest LWDS::WaitForConnection() {
 
   do {
 #ifdef _WIN32
-    request.socket_ = accept(socket_, (sockaddr*)&client_sock_address, &size);
+    request.socket_ =
+        accept(lwds_socket, (sockaddr*)&client_sock_address, &size);
 #else
-    request.socket_ = accept(socket_, (sockaddr*)&client_sock_address, (socklen_t*)&size);
+    request.socket_ =
+        accept(socket_, (sockaddr*)&client_sock_address, (socklen_t*)&size);
 #endif
-   if (request.socket_ < 0) continue;
+    if (request.socket_ < 0) continue;
     request.sock_address_ = client_sock_address;
 
 #ifdef _WIN32
@@ -82,24 +85,23 @@ HttpRequest LWDS::WaitForConnection() {
       std::cout << "Failed to set timeout for client socket!\n";
     }
 
-#else 
+#else
 
-  static timeval timeout;
-  timeout.tv_sec = 1;
-  timeout.tv_usec = 0;
-  if (setsockopt(request.socket_, SOL_SOCKET, SO_RCVTIMEO, &timeout,
-                 sizeof(timeout)) < 0) {
-    std::cout << "Failed to set timeout for client socket!\n";
-  }
+    static timeval timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    if (setsockopt(request.socket_, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                   sizeof(timeout)) < 0) {
+      std::cout << "Failed to set timeout for client socket!\n";
+    }
 #endif
 
-    
   } while (ProcessConnection(request) != 0);
 
   return request;
 }
 
-int LWDS::ProcessConnection(HttpRequest& request) {
+int ProcessConnection(HttpRequest& request) {
   static const int kBufferSize = 1024 * 4;
 
   char buffer[kBufferSize];
@@ -123,21 +125,21 @@ int LWDS::ProcessConnection(HttpRequest& request) {
   return 0;
 }
 
-Session* LWDS::StartSession(HttpRequest& request) {
+Session* StartSession(HttpRequest& request) {
   if (KeyIn(request.cookies_, "session_id") &&
-      KeyIn(sessions_, request.cookies_["session_id"])) {
+      KeyIn(sessions, request.cookies_["session_id"])) {
     request.new_session_ = false;
-    return &sessions_[request.cookies_["session_id"]];
+    return &sessions[request.cookies_["session_id"]];
   }
 
   std::string session_id = GenerateSessionId(10);
-  sessions_[session_id] = Session();
-  sessions_[session_id].id_ = session_id;
+  sessions[session_id] = Session();
+  sessions[session_id].id_ = session_id;
   request.new_session_ = true;
-  return &sessions_[session_id];
+  return &sessions[session_id];
 }
 
-std::string LWDS::GenerateSessionId(int size) {
+std::string GenerateSessionId(int size) {
   srand((unsigned int)time(NULL));
   static const char kAlphanum[] =
       "0123456789"
@@ -154,15 +156,15 @@ std::string LWDS::GenerateSessionId(int size) {
 }
 
 #ifdef _WIN32
-int LWDS::StartWSA() {
+int StartWSA() {
   WSADATA wsa;
   if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return -1;
   return 0;
 }
 #endif
 
-int LWDS::GetFileContent(const std::string& kPath, std::string& content) {
-  std::ifstream page(root_directory_ + kPath);
+int GetFileContent(const std::string& kPath, std::string& content) {
+  std::ifstream page(root_directory + kPath);
   if (!page.is_open()) return -1;
 
   std::string line;
@@ -173,7 +175,7 @@ int LWDS::GetFileContent(const std::string& kPath, std::string& content) {
   return 0;
 }
 
-void LWDS::SetDefaultHeaders(HttpResponse& response) {
+void SetDefaultHeaders(HttpResponse& response) {
   if (!KeyIn(response.headers_, "Content-Length"))
     response.headers_["Content-Length"] =
         std::to_string(response.content_.size());
@@ -185,8 +187,8 @@ void LWDS::SetDefaultHeaders(HttpResponse& response) {
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
 }
 
-bool LWDS::FileExists(const std::string& kPath) {
-  std::ifstream page(root_directory_ + kPath);
+bool FileExists(const std::string& kPath) {
+  std::ifstream page(root_directory + kPath);
   if (page.is_open()) {
     page.close();
     return true;
@@ -194,8 +196,7 @@ bool LWDS::FileExists(const std::string& kPath) {
   return false;
 }
 
-void LWDS::RespondToRequest(const HttpRequest& kRequest,
-                                 HttpResponse& response) {
+void RespondToRequest(const HttpRequest& kRequest, HttpResponse& response) {
   SetDefaultHeaders(response);
   std::string message = response.BuildResponse();
   send(kRequest.socket_, message.c_str(), message.size(), 0);
@@ -203,20 +204,23 @@ void LWDS::RespondToRequest(const HttpRequest& kRequest,
   return;
 }
 
-void LWDS::HandleRequest(HttpRequest& request) {
+void HandleRequest(HttpRequest& request) {
   Session* session = StartSession(request);
   if (request.new_session_) InitializeSessionData(session->id_);
 
   PageData page_data;
   page_data.request = request;
   page_data.session = session;
-  page_data.users_db = databases_.users;
+  page_data.users_db = databases.users;
 
   static std::unordered_map<std::string, std::function<HttpResponse()>>
       route_handler = {
-          {"/", [&]() { return HandlePage<IndexPage>(page_data); }},
-          {"/login", [&]() { return HandlePage<LoginPage>(page_data); }},
-          {"/register", [&]() { return HandlePage<RegisterPage>(page_data); }},
+          {"/", 
+          [&page_data]() { return HandlePage<IndexPage>(page_data); }},
+          {"/login",
+           [&page_data]() { return HandlePage<LoginPage>(page_data); }},
+          {"/register",
+           [&page_data]() { return HandlePage<RegisterPage>(page_data); }},
       };
 
   HttpResponse response = KeyIn(route_handler, request.path_)
@@ -229,17 +233,16 @@ void LWDS::HandleRequest(HttpRequest& request) {
   return;
 }
 
-void LWDS::SetSessionCookie(const Session* kSession,
-                                 HttpResponse& response) {
+void SetSessionCookie(const Session* kSession, HttpResponse& response) {
   std::string cookie = "session_id=" + kSession->id_;
   response.headers_["Set-Cookie"] = cookie;
 }
 
-void LWDS::InitializeSessionData(const std::string& kId) {
-  sessions_[kId].data_["logged_in"] = "false";
+void InitializeSessionData(const std::string& kId) {
+  sessions[kId].data_["logged_in"] = "false";
 }
 
-HttpResponse LWDS::DefaultResponse(const HttpRequest& kRequest) {
+HttpResponse DefaultResponse(const HttpRequest& kRequest) {
   HttpResponse response;
   if (!FileExists(kRequest.path_)) {
     response.SetHttpStatus(HttpStatus::NOT_FOUND);
@@ -251,7 +254,7 @@ HttpResponse LWDS::DefaultResponse(const HttpRequest& kRequest) {
   return response;
 }
 
-std::string LWDS::GetContentType(const std::string& kFile) {
+std::string GetContentType(const std::string& kFile) {
   static const std::regex kExtensionRegex("\\/\\w*\\.(\\w*)");
   static std::unordered_map<std::string, std::string> content_types = {
       {"txt", "text/plain"},
@@ -274,3 +277,12 @@ std::string LWDS::GetContentType(const std::string& kFile) {
 
   return content_types[match[1]];
 }
+
+std::string root_directory;
+int port;
+Databases databases;
+std::unordered_map<std::string, Session> sessions;
+SOCKET lwds_socket;
+sockaddr_in sock_address;
+
+}  // namespace lwds
