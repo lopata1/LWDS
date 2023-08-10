@@ -4,14 +4,13 @@
 #include "../include/lwds.h"
 #include "../include/config_parser.h"
 
-void CreateDatabases(const int kMaxUsers);
-
 int main() {
   std::unordered_map<std::string, std::string> config = ParseConfig("config.ini");
   const int kPort = std::stoi(config["port"]);
-  const int kMaxUsers = std::stoi(config["database_max_users"]);
+  const int kMaxData = std::stoi(config["database_max_data"]);
   
-  CreateDatabases(kMaxUsers);
+  CreateDatabases();
+  CreateDatabasesSecondaryKey(kMaxData);
 
   if (lwds::Start(config["root_directory_path"], kPort) != 0) {
     std::cout << "Failed to start LWDS\n";
@@ -25,13 +24,4 @@ int main() {
   }
 
   return 0;
-}
-
-void CreateDatabases(const int kMaxUsers) {
-  DbData db_data = {"Users database",
-                    "Database used for storing website users.", 0};
-  lwds::databases.users = std::make_shared<Database<User>>(
-      "../databases/users_database.db", db_data);
-  lwds::databases.users->MakeSecondaryKey("../databases/users_username.db",
-                                            20, kMaxUsers);
 }

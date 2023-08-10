@@ -7,11 +7,11 @@
 class LoginPage : public Page {
  public:
   LoginPage(PageData data);
-  HttpResponse HandlePost();
-  HttpResponse Handle();
-  std::string BuildPage();
+  virtual HttpResponse HandlePost();
+  virtual HttpResponse HandleGet();
+  virtual std::string BuildPage();
 
-  static const std::string file_location_;
+  static const std::string page_location_;
 
  private:
   bool login_failed_ = false;

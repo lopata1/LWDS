@@ -5,7 +5,7 @@
 
 #include "../../include/html/preprocessor.h"
 
-const std::string IndexPage::file_location_ = "index.html";
+const std::string IndexPage::page_location_ = "index.html";
 
 IndexPage::IndexPage(PageData page_data) : Page(page_data) {}
 
@@ -20,7 +20,7 @@ std::string IndexPage::BuildPage() {
   return Preprocess(page_data_.html, variables);
 }
 
-HttpResponse IndexPage::Handle() {
+HttpResponse IndexPage::HandleGet() {
   HttpResponse response;
 
   if (page_data_.session->data_["logged_in"] == "false") {

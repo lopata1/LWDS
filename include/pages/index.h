@@ -9,10 +9,10 @@
 class IndexPage : public Page {
  public:
   IndexPage(PageData page_data);
-  HttpResponse Handle();
-  std::string BuildPage();
+  virtual HttpResponse HandleGet();
+  virtual std::string BuildPage();
 
-  static const std::string file_location_;
+  static const std::string page_location_;
 
  private:
 };

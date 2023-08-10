@@ -7,7 +7,7 @@
 #include "../../include/html/preprocessor.h"
 #include "../../include/utils.h"
 
-const std::string LoginPage::file_location_ = "login.html";
+const std::string LoginPage::page_location_ = "login.html";
 
 LoginPage::LoginPage(PageData page_data) : Page(page_data) {}
 
@@ -44,9 +44,7 @@ HttpResponse LoginPage::HandlePost() {
   return response;
 }
 
-HttpResponse LoginPage::Handle() {
-  if (page_data_.request.method_ == HttpMethod::POST) return HandlePost();
-
+HttpResponse LoginPage::HandleGet() {
   HttpResponse response;
 
   if (page_data_.session->data_["logged_in"] == "true") {

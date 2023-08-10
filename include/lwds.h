@@ -11,10 +11,7 @@
 #include "pages/page.h"
 #include "session.h"
 #include "network.h"
-
-struct Databases {
-  std::shared_ptr<Database<User>> users;
-};
+#include "databases/databases.h"
 
 namespace lwds {
   int Start(std::string root = ".", int port = 80);
@@ -35,7 +32,7 @@ namespace lwds {
 
   template <typename TPage>
   HttpResponse HandlePage(PageData& page_data) {
-    GetFileContent(TPage::file_location_, page_data.html);
+    GetFileContent(TPage::page_location_, page_data.html);
     return TPage(page_data).Handle();
   }
 

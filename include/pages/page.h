@@ -16,6 +16,10 @@ struct PageData {
 class Page {
  public:
   Page(PageData page_data);
+  virtual HttpResponse Handle();
+  virtual HttpResponse HandlePost();
+  virtual HttpResponse HandleGet() = 0;
+  virtual std::string BuildPage() = 0;
 
  protected:
   PageData page_data_;

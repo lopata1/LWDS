@@ -6,7 +6,7 @@
 #include "../../include/html/preprocessor.h"
 #include "../../include/utils.h"
 
-const std::string RegisterPage::file_location_ = "register.html";
+const std::string RegisterPage::page_location_ = "register.html";
 
 RegisterPage::RegisterPage(PageData pdata) : Page(pdata) {}
 
@@ -23,7 +23,7 @@ HttpResponse RegisterPage::HandlePost() {
     return DisplayError("Username must be atleast 3 characters long");
 
   std::vector<User> found =
-      page_data_.users_db->GetAllDataWhere([=](User* user) {
+      page_data_.users_db->GetAllDataWhere([&](User* user) {
         return user->username == page_data_.request.query_["username"];
       });
 
@@ -67,9 +67,7 @@ HttpResponse RegisterPage::DisplayError(std::string error) {
   return response;
 }
 
-HttpResponse RegisterPage::Handle() {
-  if (page_data_.request.method_ == HttpMethod::POST) return HandlePost();
-
+HttpResponse RegisterPage::HandleGet() {
   HttpResponse response;
 
   if (page_data_.session->data_["logged_in"] == "true") {
