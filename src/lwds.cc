@@ -1,4 +1,4 @@
-#include "../include/web_server.h"
+#include "../include/lwds.h"
 
 #include <fstream>
 #include <iostream>
@@ -14,21 +14,12 @@
 static const auto closesocket = close;
 #endif
 
-WebServer::WebServer(std::string root, int port) {
+LWDS::LWDS(std::string root, int port) {
   root_directory_ = root;
   port_ = port;
-
-  DbData db_data = {"Users database",
-                    "Database used for storing website users.", 0};
-
-  static const int kMaxUsers = 1000000;
-  databases_.users = std::make_shared<Database<User>>(
-      "../databases/users_database.db", db_data);
-  databases_.users->MakeSecondaryKey("../databases/users_username.db", 20,
-                                     kMaxUsers);
 }
 
-int WebServer::StartWebServer() {
+int LWDS::StartLWDS() {
 #ifdef _WIN32
   if (StartWSA() != 0) {
     std::cout << "Failed to start WSA\n";
@@ -69,7 +60,7 @@ int WebServer::StartWebServer() {
   return 0;
 }
 
-HttpRequest WebServer::WaitForConnection() {
+HttpRequest LWDS::WaitForConnection() {
   HttpRequest request;
 
   sockaddr_in client_sock_address;
@@ -108,7 +99,7 @@ HttpRequest WebServer::WaitForConnection() {
   return request;
 }
 
-int WebServer::ProcessConnection(HttpRequest& request) {
+int LWDS::ProcessConnection(HttpRequest& request) {
   static const int kBufferSize = 1024 * 4;
 
   char buffer[kBufferSize];
@@ -132,7 +123,7 @@ int WebServer::ProcessConnection(HttpRequest& request) {
   return 0;
 }
 
-Session* WebServer::StartSession(HttpRequest& request) {
+Session* LWDS::StartSession(HttpRequest& request) {
   if (KeyIn(request.cookies_, "session_id") &&
       KeyIn(sessions_, request.cookies_["session_id"])) {
     request.new_session_ = false;
@@ -146,9 +137,9 @@ Session* WebServer::StartSession(HttpRequest& request) {
   return &sessions_[session_id];
 }
 
-std::string WebServer::GenerateSessionId(int size) {
+std::string LWDS::GenerateSessionId(int size) {
   srand((unsigned int)time(NULL));
-  static const char alphanum[] =
+  static const char kAlphanum[] =
       "0123456789"
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
       "abcdefghijklmnopqrstuvwxyz";
@@ -157,21 +148,21 @@ std::string WebServer::GenerateSessionId(int size) {
   id.reserve(size);
 
   for (int i = 0; i < size; ++i) {
-    id += alphanum[rand() % (sizeof(alphanum) - 1)];
+    id += kAlphanum[rand() % (sizeof(kAlphanum) - 1)];
   }
   return id;
 }
 
 #ifdef _WIN32
-int WebServer::StartWSA() {
+int LWDS::StartWSA() {
   WSADATA wsa;
   if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return -1;
   return 0;
 }
 #endif
 
-int WebServer::GetFileContent(const std::string& path, std::string& content) {
-  std::ifstream page(root_directory_ + path);
+int LWDS::GetFileContent(const std::string& kPath, std::string& content) {
+  std::ifstream page(root_directory_ + kPath);
   if (!page.is_open()) return -1;
 
   std::string line;
@@ -182,7 +173,7 @@ int WebServer::GetFileContent(const std::string& path, std::string& content) {
   return 0;
 }
 
-void WebServer::SetDefaultHeaders(HttpResponse& response) {
+void LWDS::SetDefaultHeaders(HttpResponse& response) {
   if (!KeyIn(response.headers_, "Content-Length"))
     response.headers_["Content-Length"] =
         std::to_string(response.content_.size());
@@ -194,8 +185,8 @@ void WebServer::SetDefaultHeaders(HttpResponse& response) {
     response.headers_["Content-Type"] = "text/html; charset=utf-8";
 }
 
-bool WebServer::FileExists(const std::string& path) {
-  std::ifstream page(root_directory_ + path);
+bool LWDS::FileExists(const std::string& kPath) {
+  std::ifstream page(root_directory_ + kPath);
   if (page.is_open()) {
     page.close();
     return true;
@@ -203,16 +194,16 @@ bool WebServer::FileExists(const std::string& path) {
   return false;
 }
 
-void WebServer::RespondToRequest(const HttpRequest& request,
+void LWDS::RespondToRequest(const HttpRequest& kRequest,
                                  HttpResponse& response) {
   SetDefaultHeaders(response);
   std::string message = response.BuildResponse();
-  send(request.socket_, message.c_str(), message.size(), 0);
-  closesocket(request.socket_);
+  send(kRequest.socket_, message.c_str(), message.size(), 0);
+  closesocket(kRequest.socket_);
   return;
 }
 
-void WebServer::HandleRequest(HttpRequest& request) {
+void LWDS::HandleRequest(HttpRequest& request) {
   Session* session = StartSession(request);
   if (request.new_session_) InitializeSessionData(session->id_);
 
@@ -238,30 +229,30 @@ void WebServer::HandleRequest(HttpRequest& request) {
   return;
 }
 
-void WebServer::SetSessionCookie(const Session* session,
+void LWDS::SetSessionCookie(const Session* kSession,
                                  HttpResponse& response) {
-  std::string cookie = "session_id=" + session->id_;
+  std::string cookie = "session_id=" + kSession->id_;
   response.headers_["Set-Cookie"] = cookie;
 }
 
-void WebServer::InitializeSessionData(const std::string& id) {
-  sessions_[id].data_["logged_in"] = "false";
+void LWDS::InitializeSessionData(const std::string& kId) {
+  sessions_[kId].data_["logged_in"] = "false";
 }
 
-HttpResponse WebServer::DefaultResponse(const HttpRequest& request) {
+HttpResponse LWDS::DefaultResponse(const HttpRequest& kRequest) {
   HttpResponse response;
-  if (!FileExists(request.path_)) {
+  if (!FileExists(kRequest.path_)) {
     response.SetHttpStatus(HttpStatus::NOT_FOUND);
     GetFileContent("404.html", response.content_);
     return response;
   }
-  response.headers_["Content-Type"] = GetContentType(request.path_);
-  GetFileContent(request.path_, response.content_);
+  response.headers_["Content-Type"] = GetContentType(kRequest.path_);
+  GetFileContent(kRequest.path_, response.content_);
   return response;
 }
 
-std::string WebServer::GetContentType(const std::string& file) {
-  static const std::regex extension_regex("\\/\\w*\\.(\\w*)");
+std::string LWDS::GetContentType(const std::string& kFile) {
+  static const std::regex kExtensionRegex("\\/\\w*\\.(\\w*)");
   static std::unordered_map<std::string, std::string> content_types = {
       {"txt", "text/plain"},
       {"css", "text/css"},
@@ -277,7 +268,7 @@ std::string WebServer::GetContentType(const std::string& file) {
 
   std::smatch match;
 
-  if (!std::regex_search(file, match, extension_regex) ||
+  if (!std::regex_search(kFile, match, kExtensionRegex) ||
       !KeyIn(content_types, match[1]))
     return "text/plain";
 

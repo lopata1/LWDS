@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION "3.10")
 
-project("WebServer")
+project("lwds")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -28,7 +28,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 enable_testing()
 
-add_library(web_server_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
+add_library(lwds_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 add_subdirectory(tests)
 

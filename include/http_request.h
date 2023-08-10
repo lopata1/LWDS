@@ -26,9 +26,9 @@ class HttpRequest {
 
  private:
   std::string ConvertNumberToIp(unsigned int ip_number);
-  int ParseHeaders(const std::string& head_data);
-  int ParsePath(const std::string& head_data);
-  int ParseMethod(const std::string& head_data);
-  int ParseCookies(const std::string& head_data);
-  int ParseQuery(const std::string& body_data);
+  int ParseHeaders(const std::string& kHeadData);
+  int ParsePath(const std::string& kHeadData);
+  int ParseMethod(const std::string& kHeadData);
+  int ParseCookies();
+  int ParseQuery(const std::string& kBodyData);
 };

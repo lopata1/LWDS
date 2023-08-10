@@ -16,20 +16,20 @@ struct Databases {
   std::shared_ptr<Database<User>> users;
 };
 
-class WebServer {
+class LWDS {
  public:
-  WebServer(std::string root = ".", int port = 80);
+  LWDS(std::string root = ".", int port = 80);
 
-  int StartWebServer();
+  int StartLWDS();
   HttpRequest WaitForConnection();
-  bool FileExists(const std::string& path);
-  int GetFileContent(const std::string& path, std::string& content);
-  void RespondToRequest(const HttpRequest& request, HttpResponse& response);
+  bool FileExists(const std::string& kPath);
+  int GetFileContent(const std::string& kPath, std::string& content);
+  void RespondToRequest(const HttpRequest& kRequest, HttpResponse& response);
   int ProcessConnection(HttpRequest& request);
   Session* StartSession(HttpRequest& request);
   void HandleRequest(HttpRequest& request);
-  void InitializeSessionData(const std::string& id);
-  HttpResponse DefaultResponse(const HttpRequest& request);
+  void InitializeSessionData(const std::string& kId);
+  HttpResponse DefaultResponse(const HttpRequest& kRequest);
 
   std::string root_directory_;
   int port_;
@@ -40,8 +40,8 @@ class WebServer {
   int StartWSA();
   std::string GenerateSessionId(int size);
   void SetDefaultHeaders(HttpResponse& response);
-  std::string GetContentType(const std::string& file);
-  void SetSessionCookie(const Session* session, HttpResponse& response);
+  std::string GetContentType(const std::string& kFile);
+  void SetSessionCookie(const Session* kSession, HttpResponse& response);
 
   template <typename TPage>
   HttpResponse HandlePage(PageData& page_data) {
