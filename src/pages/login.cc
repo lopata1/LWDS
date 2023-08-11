@@ -1,11 +1,10 @@
-#include "../../include/pages/login.h"
+#include <lwds/html/html.h>
+#include <lwds/html/preprocessor.h>
+#include <lwds/pages/login.h>
+#include <lwds/utils.h>
 
 #include <unordered_map>
 #include <vector>
-
-#include "../../include/html/html.h"
-#include "../../include/html/preprocessor.h"
-#include "../../include/utils.h"
 
 const std::string LoginPage::page_location_ = "login.html";
 

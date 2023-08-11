@@ -1,4 +1,4 @@
-#include "../../include/api/inbox_get.h"
+#include <lwds/api/inbox_get.h>
 
 const std::string InboxGetApi::endpoint_ = "/inbox/get";
 

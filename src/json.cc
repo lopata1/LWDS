@@ -1,4 +1,4 @@
-#include "../include/json.h"
+#include <lwds/json.h>
 
 std::string Json::Build() {
   std::string result;

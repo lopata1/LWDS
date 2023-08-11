@@ -1,9 +1,8 @@
-#include "../../include/pages/index.h"
+#include <lwds/html/preprocessor.h>
+#include <lwds/pages/index.h>
 
 #include <iostream>
 #include <unordered_map>
-
-#include "../../include/html/preprocessor.h"
 
 const std::string IndexPage::page_location_ = "index.html";
 

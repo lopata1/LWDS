@@ -1,10 +1,9 @@
-#include "../include/http_request.h"
+#include <lwds/http_request.h>
+#include <lwds/utils.h>
 
 #include <iostream>
 #include <regex>
 #include <string>
-
-#include "../include/utils.h"
 
 HttpRequest::HttpRequest(std::string& request_data) { Parse(request_data); }
 
@@ -86,6 +85,5 @@ std::string HttpRequest::ConvertNumberToIp(unsigned int ip_number) {
 }
 
 void HttpRequest::SetIpAddress(sockaddr_in& sock_address) {
-  ip_address_ =
-      ConvertNumberToIp((unsigned int)sock_address.sin_addr.s_addr);
+  ip_address_ = ConvertNumberToIp((unsigned int)sock_address.sin_addr.s_addr);
 }

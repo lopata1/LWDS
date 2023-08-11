@@ -1,10 +1,9 @@
-#include "../../include/pages/register.h"
+#include <lwds/html/html.h>
+#include <lwds/html/preprocessor.h>
+#include <lwds/pages/register.h>
+#include <lwds/utils.h>
 
 #include <cstring>
-
-#include "../../include/html/html.h"
-#include "../../include/html/preprocessor.h"
-#include "../../include/utils.h"
 
 const std::string RegisterPage::page_location_ = "register.html";
 

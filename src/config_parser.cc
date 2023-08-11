@@ -1,10 +1,11 @@
-#include "../include/config_parser.h"
+#include <lwds/config_parser.h>
+
 #include <fstream>
 #include <iostream>
 #include <regex>
 
 std::unordered_map<std::string, std::string> ParseConfig(
-  const std::string config_path) {
+    const std::string config_path) {
   std::ifstream config_file(config_path);
   if (!config_file.is_open()) {
     std::cout << "Failed to open config file\n";

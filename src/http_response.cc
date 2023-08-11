@@ -1,8 +1,7 @@
-#include "../include/http_response.h"
+#include <lwds/http_response.h>
+#include <lwds/network.h>
 
 #include <string>
-
-#include "../include/network.h"
 
 HttpResponse::HttpResponse(const HttpStatus s) { SetHttpStatus(s); }
 

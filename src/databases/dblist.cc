@@ -1,5 +1,5 @@
-#include "../../include/databases/dblist.h"
-#include "../../include/lwds.h"
+#include <lwds/databases/dblist.h>
+#include <lwds/lwds.h>
 
 void CreateDatabases() {
   DbData db_data = {"Users",

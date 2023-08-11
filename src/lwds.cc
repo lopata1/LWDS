@@ -1,14 +1,13 @@
-#include "../include/lwds.h"
+#include <lwds/lwds.h>
+#include <lwds/network.h>
+#include <lwds/pages/page.h>
+#include <lwds/pages/pages.h>
+#include <lwds/utils.h>
 
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <string>
-
-#include "../include/network.h"
-#include "../include/pages/page.h"
-#include "../include/pages/pages.h"
-#include "../include/utils.h"
 
 #ifndef _WIN32
 static const auto closesocket = close;
@@ -215,8 +214,7 @@ void HandleRequest(HttpRequest& request) {
 
   static std::unordered_map<std::string, std::function<HttpResponse()>>
       route_handler = {
-          {"/", 
-          [&page_data]() { return HandlePage<IndexPage>(page_data); }},
+          {"/", [&page_data]() { return HandlePage<IndexPage>(page_data); }},
           {"/login",
            [&page_data]() { return HandlePage<LoginPage>(page_data); }},
           {"/register",

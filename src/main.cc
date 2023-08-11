@@ -1,14 +1,15 @@
+#include <lwds/config_parser.h>
+#include <lwds/lwds.h>
+#include <lwds/utils.h>
+
 #include <iostream>
 
-#include "../include/utils.h"
-#include "../include/lwds.h"
-#include "../include/config_parser.h"
-
 int main() {
-  std::unordered_map<std::string, std::string> config = ParseConfig("config.ini");
+  std::unordered_map<std::string, std::string> config =
+      ParseConfig("config.ini");
   const int kPort = std::stoi(config["port"]);
   const int kMaxData = std::stoi(config["database_max_data"]);
-  
+
   CreateDatabases();
   CreateDatabasesSecondaryKey(kMaxData);
 
