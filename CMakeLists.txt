@@ -21,9 +21,6 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_SOURCE_DIR}/include/databases
-	${CMAKE_CURRENT_SOURCE_DIR}/include/html
-	${CMAKE_CURRENT_SOURCE_DIR}/include/pages
 )
 
 enable_testing()
