@@ -2,15 +2,17 @@
 #include <memory>
 
 #include "../databases/database.h"
+#include "../databases/dblist.h"
 #include "../http_request.h"
 #include "../http_response.h"
 #include "../session.h"
 
 struct PageData {
   HttpRequest request;
-  Session *session;
+  Session* session;
   std::string html;
-  std::shared_ptr<Database<User>> users_db;
+  //std::shared_ptr<Database<User>> users;
+  Databases db;
 };
 
 class Page {

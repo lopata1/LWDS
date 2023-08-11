@@ -20,7 +20,7 @@ HttpResponse LoginPage::HandlePost() {
     return response;
   }
 
-  int user_id = page_data_.users_db->GetIdBySecondaryKey(
+  int user_id = page_data_.db.users->GetIdBySecondaryKey(
       page_data_.request.query_["username"]);
   if (user_id == -1) {
     login_failed_ = true;
@@ -28,7 +28,7 @@ HttpResponse LoginPage::HandlePost() {
     return response;
   }
 
-  User user = page_data_.users_db->GetDataByID(user_id);
+  User user = page_data_.db.users->GetDataByID(user_id);
 
   if (user.password != page_data_.request.query_["password"]) {
     login_failed_ = true;

@@ -19,7 +19,6 @@ std::unordered_map<std::string, std::string> ParseConfig(
   std::smatch match;
   std::string::const_iterator search(raw_config.cbegin());
   while (std::regex_search(search, raw_config.cend(), match, config_regex)) {
-    std::cout << match[1] << " = " << match[2] << "\n"; 
     config[match[1]] = match[2];
     search = match.suffix().first;
   }

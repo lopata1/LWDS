@@ -211,7 +211,7 @@ void HandleRequest(HttpRequest& request) {
   PageData page_data;
   page_data.request = request;
   page_data.session = session;
-  page_data.users_db = databases.users;
+  page_data.db = databases;
 
   static std::unordered_map<std::string, std::function<HttpResponse()>>
       route_handler = {

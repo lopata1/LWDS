@@ -23,7 +23,7 @@ HttpResponse RegisterPage::HandlePost() {
     return DisplayError("Username must be atleast 3 characters long");
 
   std::vector<User> found =
-      page_data_.users_db->GetAllDataWhere([&](User* user) {
+      page_data_.db.users->GetAllDataWhere([&](User* user) {
         return user->username == page_data_.request.query_["username"];
       });
 
@@ -51,8 +51,8 @@ void RegisterPage::CreateUser() {
   strncpy_s(user.password, page_data_.request.query_["password"].c_str(),
             sizeof(user.password) - 1);
 
-  page_data_.users_db->Insert(&user);
-  page_data_.users_db->id_map_.Insert(user.username, user.id);
+  page_data_.db.users->Insert(&user);
+  page_data_.db.users->id_map_.Insert(user.username, user.id);
 }
 
 HttpResponse RegisterPage::DisplayError(std::string error) {

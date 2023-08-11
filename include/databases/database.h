@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "id_map.h"
+#include "data.h"
 
 #ifndef _WIN32
 static const auto strncpy_s = strncpy;
@@ -16,12 +17,6 @@ struct DbData {
   char title[50];
   char description[100];
   unsigned int records;
-};
-
-struct User {
-  unsigned int id;
-  char username[20];
-  char password[20];
 };
 
 template <typename Data>
