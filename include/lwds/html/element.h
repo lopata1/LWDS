@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_HTML_ELEMENT_H_
+#define LWDS_HTML_ELEMENT_H_
+
 #include <unordered_map>
 #include <string>
 
@@ -13,3 +15,5 @@ class Element {
   std::unordered_map<std::string, std::string> attributes_;
   Element *inner_html_{};
 };
+
+#endif  // LWDS_HTML_ELEMENT_H_

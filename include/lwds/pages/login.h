@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_PAGES_LOGIN_H_
+#define LWDS_PAGES_LOGIN_H_
+
 #include "../databases/database.h"
 #include "../http_request.h"
 #include "../http_response.h"
@@ -16,3 +18,5 @@ class LoginPage : public Page {
  private:
   bool login_failed_ = false;
 };
+
+#endif  // LWDS_PAGES_LOGIN_H_

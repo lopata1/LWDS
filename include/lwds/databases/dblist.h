@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_DATABASES_DBLIST_H_
+#define LWDS_DATABASES_DBLIST_H_
+
 #include <lwds/databases/database.h>
 
 #include <memory>
@@ -12,3 +14,5 @@ struct Databases {
 void CreateDatabases();
 
 void CreateDatabasesSecondaryKey(const int kMaxData);
+
+#endif  // LWDS_DATABASES_DBLIST_H_

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_HTTP_REQUEST_H_
+#define LWDS_HTTP_REQUEST_H_
+
 #include "network.h"
 
 #include <iostream>
@@ -32,3 +34,5 @@ class HttpRequest {
   int ParseCookies();
   int ParseQuery(const std::string& kBodyData);
 };
+
+#endif  // LWDS_HTTP_REQUEST_H_

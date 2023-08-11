@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_PAGES_REGISTER_H_
+#define LWDS_PAGES_REGISTER_H_
+
 #include "../databases/database.h"
 #include "../http_response.h"
 #include "page.h"
@@ -18,3 +20,5 @@ class RegisterPage : public Page {
 
   std::string error_message_;
 };
+
+#endif  // LWDS_PAGES_REGISTER_H_

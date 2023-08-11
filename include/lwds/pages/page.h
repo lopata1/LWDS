@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_PAGES_PAGE_H_
+#define LWDS_PAGES_PAGE_H_
+
 #include <memory>
 
 #include "../databases/database.h"
@@ -26,3 +28,5 @@ class Page {
  protected:
   PageData page_data_;
 };
+
+#endif  // LWDS_PAGES_PAGE_H_

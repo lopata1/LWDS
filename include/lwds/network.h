@@ -1,3 +1,6 @@
+#ifndef LWDS_NETWORK_H_
+#define LWDS_NETWORK_H_
+
 #ifdef _WIN32
 
 #include <winsock2.h>
@@ -13,3 +16,4 @@ typedef int SOCKET;
 
 #endif
 
+#endif  // LWDS_NETWORK_H_

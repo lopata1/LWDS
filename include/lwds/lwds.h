@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LWDS_LWDS_H_
+#define LWDS_LWDS_H_
 
 #include <cstdarg>
 #include <iostream>
@@ -43,3 +44,5 @@ namespace lwds {
   extern SOCKET lwds_socket;
   extern sockaddr_in sock_address;
 };
+
+#endif  // LWDS_LWDS_H_

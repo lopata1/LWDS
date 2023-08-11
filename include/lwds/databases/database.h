@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_DATABASES_DATABASE_H_
+#define LWDS_DATABASES_DATABASE_H_
+
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -155,3 +157,5 @@ template <typename Data>
 int Database<Data>::GetIdBySecondaryKey(std::string key) {
   return id_map_.Get(key);
 }
+
+#endif  // LWDS_DATABASES_DATABASE_H_

@@ -1,11 +1,12 @@
-#pragma once
+#ifndef LWDS_API_API_H_
+#define LWDS_API_API_H_
 
 #include "../databases/database.h"
 #include "../databases/dblist.h"
 #include "../http_request.h"
 #include "../http_response.h"
-#include "../session.h"
 #include "../json.h"
+#include "../session.h"
 
 struct ApiData {
   HttpRequest request;
@@ -22,3 +23,5 @@ class Api {
   ApiData api_data_;
   Json json_;
 };
+
+#endif  // LWDS_API_API_H_

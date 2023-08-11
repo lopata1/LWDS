@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LWDS_DATABASES_DATA_H_
+#define LWDS_DATABASES_DATA_H_
 
 struct User {
   unsigned int id;
@@ -18,3 +19,5 @@ struct Message {
   unsigned int author_id;
   char content[500];
 };
+
+#endif  // LWDS_DATABASES_DATA_H_

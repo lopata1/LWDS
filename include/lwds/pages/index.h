@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_PAGES_INDEX_H_
+#define LWDS_PAGES_INDEX_H_
+
 #include <iostream>
 
 #include "../databases/database.h"
@@ -16,3 +18,5 @@ class IndexPage : public Page {
 
  private:
 };
+
+#endif  // LWDS_PAGES_INDEX_H_

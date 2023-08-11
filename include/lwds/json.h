@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_JSON_H_
+#define LWDS_JSON_H_
+
 #include <string>
 #include <map>
 #include <variant>
@@ -19,3 +21,5 @@ class Json {
  private:
   std::map<std::string, std::variant<Json, std::string, int>> json_data_;
 };
+
+#endif  // LWDS_JSON_H_

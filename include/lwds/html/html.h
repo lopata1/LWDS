@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_HTML_HTML_H_
+#define LWDS_HTML_HTML_H_
+
 #include <vector>
 
 #include "element.h"
@@ -11,3 +13,5 @@ class Html {
  private:
   std::vector<Element> elements_;
 };
+
+#endif  // LWDS_HTML_HTML_H_

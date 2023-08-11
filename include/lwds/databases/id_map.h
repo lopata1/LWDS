@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LWDS_DATABASES_ID_MAP_H_
+#define LWDS_DATABASES_ID_MAP_H_
 
 #include <fstream>
 #include <iostream>
@@ -24,3 +25,5 @@ class IdMap {
   int WriteId(int offset, int value);
   int ReadId(int offset);
 };
+
+#endif  // LWDS_DATABASES_ID_MAP_H_

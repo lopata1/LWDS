@@ -1,4 +1,6 @@
-#pragma once
+#ifndef LWDS_HTTP_RESPONSE_H_
+#define LWDS_HTTP_RESPONSE_H_
+
 #include <iostream>
 #include <unordered_map>
 
@@ -25,3 +27,5 @@ class HttpResponse {
   std::string content_;
   std::string status_message_;
 };
+
+#endif  // LWDS_HTTP_RESPONSE_H_
