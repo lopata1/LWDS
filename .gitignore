@@ -1,6 +1,7 @@
 /out
 /build
-/bin
+/bin/*
+!/bin/.gitkeep
 /databases/*.db
 /.vs
 /tests/out

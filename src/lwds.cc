@@ -1,3 +1,5 @@
+#include <lwds/api/api.h>
+#include <lwds/api/apis.h>
 #include <lwds/lwds.h>
 #include <lwds/network.h>
 #include <lwds/pages/page.h>
@@ -207,10 +209,11 @@ void HandleRequest(HttpRequest& request) {
   Session* session = StartSession(request);
   if (request.new_session_) InitializeSessionData(session->id_);
 
+  ApiData api_data;
   PageData page_data;
-  page_data.request = request;
-  page_data.session = session;
-  page_data.db = databases;
+  page_data.request = api_data.request = request;
+  page_data.session = api_data.session = session;
+  page_data.db = api_data.db = databases;
 
   static std::unordered_map<std::string, std::function<HttpResponse()>>
       route_handler = {
@@ -219,6 +222,8 @@ void HandleRequest(HttpRequest& request) {
            [&page_data]() { return HandlePage<LoginPage>(page_data); }},
           {"/register",
            [&page_data]() { return HandlePage<RegisterPage>(page_data); }},
+          {"/api/inbox/get",
+           [&api_data]() { return InboxGetApi(api_data).Handle(); }}
       };
 
   HttpResponse response = KeyIn(route_handler, request.path_)

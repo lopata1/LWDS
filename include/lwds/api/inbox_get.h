@@ -10,7 +10,6 @@ class InboxGetApi : public Api {
  public:
   InboxGetApi(ApiData api_data);
   virtual HttpResponse Handle();
-
   static const std::string endpoint_;
 };
 

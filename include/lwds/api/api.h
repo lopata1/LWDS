@@ -17,11 +17,14 @@ struct ApiData {
 class Api {
  public:
   Api(ApiData api_data);
+
   virtual HttpResponse Handle() = 0;
+  void SetInvalidRequest();
 
  protected:
   ApiData api_data_;
   Json json_;
+  HttpResponse response_;
 };
 
 #endif  // LWDS_API_API_H_
